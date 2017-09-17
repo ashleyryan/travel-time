@@ -36,8 +36,29 @@ class CommuteSheet {
         });
     }
 
-    createSheet(sheetName) {
+    addResultData(rows) {
+        return new Promise((resolve, reject) => {
+            var request = {
+                auth: this.auth,
+                spreadsheetId: this.sheetId,
+                range: 'Results!A1:H',
+                valueInputOption: 'RAW',
+                insertDataOption: 'INSERT_ROWS',
+                resource: {
+                    values: rows
+                }
+                
+            };
 
+            var sheets = google.sheets('v4');
+            sheets.spreadsheets.values.append(request, function(err, response) {
+                if (err) {
+                    reject('The API returned an error: ' + err);
+                    return;
+                }
+                resolve(response);
+            });
+        });
     }
 
 }
